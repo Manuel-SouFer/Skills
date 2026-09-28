@@ -1,5 +1,7 @@
 # Skills
 
+[![test](https://github.com/Manuel-SouFer/Skills/actions/workflows/test.yml/badge.svg)](https://github.com/Manuel-SouFer/Skills/actions/workflows/test.yml)
+
 Smoke tests for [TypeSafe](https://typesafe.ai)'s Jev model. Both files ask Jev the
 same three questions and assert it answers sensibly: a refund request is about
 billing, a thank-you note is not, and the refund request's tone is frustrated or angry.
