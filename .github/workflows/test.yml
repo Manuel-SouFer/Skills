@@ -16,7 +16,7 @@ jobs:
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
         with:
           python-version: "3.12"
-      - run: pip install typesafe-sdk pytest
+      - run: pip install --require-hashes -r requirements.txt
       - run: python -m pytest -v test_typesafe.py
         env:
           TYPESAFE_API_KEY: ${{ secrets.TYPESAFE_API_KEY }}

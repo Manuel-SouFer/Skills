@@ -11,9 +11,11 @@ billing, a thank-you note is not, and the refund request's tone is frustrated or
 Set `TYPESAFE_API_KEY` in your environment. Never write it to a file.
 
 ```bash
-pip install typesafe-sdk pytest   # Python
-bun install                       # TypeScript
+pip install --require-hashes -r requirements.txt   # Python
+bun install                                        # TypeScript
 ```
+
+To update Python deps, edit `requirements.in` and re-run the `uv pip compile` command at the top of `requirements.txt`.
 
 ## Run
 
