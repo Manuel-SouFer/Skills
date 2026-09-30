@@ -20,7 +20,10 @@ async function billingNoul(document: string) {
     state: { document },
     questions: { billing: noul("Is this ticket about billing?") },
   });
-  return answers.billing.noul;
+  const p = answers.billing.noul;
+  expect(p).toBeGreaterThanOrEqual(0); // also rejects NaN
+  expect(p).toBeLessThanOrEqual(1);
+  return p;
 }
 
 test("billing ticket is billing", async () => {

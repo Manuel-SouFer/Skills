@@ -9,12 +9,14 @@ permissions:
   contents: read
 
 # Fork PRs get no secrets: run the secret-free checks, skip the live Jev calls.
+# Every other run needs the key, so a missing/broken secret fails loudly.
 env:
-  HAS_KEY: ${{ secrets.TYPESAFE_API_KEY != '' }}
+  SKIP_LIVE: ${{ github.event.pull_request.head.repo.fork == true }}
 
 jobs:
   python:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
@@ -22,21 +24,24 @@ jobs:
           python-version: "3.12"
       - run: pip install --require-hashes -r requirements.txt
       - run: python -m pytest --collect-only -q test_typesafe.py
-      - if: env.HAS_KEY == 'true'
+      - if: env.SKIP_LIVE != 'true'
         run: python -m pytest -v test_typesafe.py
         env:
           TYPESAFE_API_KEY: ${{ secrets.TYPESAFE_API_KEY }}
 
   bun:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
       - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
+        with:
+          bun-version: 1.4.0
       - run: bun install --frozen-lockfile
       - run: bun ./node_modules/typescript/bin/tsc --noEmit
-      - if: env.HAS_KEY == 'true'
+      - if: env.SKIP_LIVE != 'true'
         run: bun test
         env:
           TYPESAFE_API_KEY: ${{ secrets.TYPESAFE_API_KEY }}
-      - if: env.HAS_KEY != 'true'
-        run: echo "::notice::TYPESAFE_API_KEY unavailable (fork PR?), live Jev tests skipped"
+      - if: env.SKIP_LIVE == 'true'
+        run: echo "::notice::Fork PR: no secrets, live Jev tests skipped"
