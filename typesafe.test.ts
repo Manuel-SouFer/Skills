@@ -1,8 +1,17 @@
 // Smoke test: TYPESAFE_API_KEY is valid and Jev answers sensibly.
-import { expect, test } from "bun:test";
+import { expect, setDefaultTimeout, test } from "bun:test";
 import { choice, noul, TypeSafeClient } from "@typesafe-ai/sdk";
 
-const client = new TypeSafeClient();
+// Bun's 5s default would fail a slow-but-successful request; budget for every attempt plus retry waits.
+const TIMEOUT_MS = 10_000;
+const MAX_RETRIES = 2;
+const MAX_WAIT_MS = 5_000;
+setDefaultTimeout((MAX_RETRIES + 1) * TIMEOUT_MS + MAX_RETRIES * MAX_WAIT_MS + 5_000);
+
+const client = new TypeSafeClient({
+  timeout: TIMEOUT_MS,
+  retry: { maxRetries: MAX_RETRIES, backoffMaxMs: MAX_WAIT_MS, maxRetryAfterMs: MAX_WAIT_MS },
+});
 const BILLING = "I was charged twice. Please refund me today.";
 const FRUSTRATED = "Third time you've double-charged me. I'm fed up, refund me NOW.";
 
