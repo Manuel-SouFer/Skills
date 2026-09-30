@@ -2,6 +2,7 @@
 import pytest
 from typesafe_sdk import Choice, Noul, TypeSafeClient
 
+FRUSTRATED = "Third time you've double-charged me. I'm fed up, refund me NOW."
 BILLING_Q = Noul(instructions="Is this ticket about billing?")
 
 
@@ -26,7 +27,7 @@ def test_praise_is_not_billing(client):
 
 def test_tone_choice(client):
     r = client.system_one(
-        state={"document": "I was charged twice. Please refund me today."},
+        state={"document": FRUSTRATED},
         questions={
             "tone": Choice(
                 instructions="What is the customer's tone?",

@@ -4,6 +4,7 @@ import { choice, noul, TypeSafeClient } from "@typesafe-ai/sdk";
 
 const client = new TypeSafeClient();
 const BILLING = "I was charged twice. Please refund me today.";
+const FRUSTRATED = "Third time you've double-charged me. I'm fed up, refund me NOW.";
 
 async function billingNoul(document: string) {
   const { answers } = await client.systemOne({
@@ -23,7 +24,7 @@ test("praise is not billing", async () => {
 
 test("tone choice", async () => {
   const { answers } = await client.systemOne({
-    state: { document: BILLING },
+    state: { document: FRUSTRATED },
     questions: {
       tone: choice("What is the customer's tone?", { calm: null, frustrated: null, angry: null }),
     },
