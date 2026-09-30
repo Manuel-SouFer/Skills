@@ -44,4 +44,4 @@ jobs:
         env:
           TYPESAFE_API_KEY: ${{ secrets.TYPESAFE_API_KEY }}
       - if: env.SKIP_LIVE == 'true'
-        run: echo "::notice::Fork PR: no secrets, live Jev tests skipped"
+        run: echo '::notice::Fork PR has no secrets, live Jev tests skipped'
